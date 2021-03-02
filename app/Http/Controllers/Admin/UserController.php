@@ -20,13 +20,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        // if(Gate::denies('logged-in')){
-        //     dd('No access');
-        // }
-        // if(Gate::allows('is-admin')){
+        if(Gate::denies('logged-in')){
+            dd('No access');
+        }
+        if(Gate::allows('is-admin')){
             return view('admin.users.index',['users' => User::orderBy('id','desc')->paginate(10)]);
-        // }
-        // dd('you want to be admin');
+        }
+        dd('you want to be admin');
 
     }
 
@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $user = $newUser->create($request->only(['fname','lname','email','password','password_confirmation']));
         $user->roles()->sync($request->roles);
-        
+
         Password::sendResetLink($request->only(['email']));
         $request->session()->flash('success','User create Successfully');
 
